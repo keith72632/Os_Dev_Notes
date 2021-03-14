@@ -50,6 +50,7 @@ Memory, Addresses and labels
 	-Labels can go anywhere in a program
 	-adding a value plus the offset 0x7c00 will result in a correct result, but cumbersome, so
 	[org 0x7c00] directive tells assembler where htis code should be added 
+	-when setting up stack, set base somewhere "below" 0x9fc00. 
 Defining Strings
 	-my_string:
 		db 'Booting OS'
@@ -58,3 +59,11 @@ Defining Strings
 	-strigs must have length declare
 		-one way is to null terminate
 		-ex. db 'booting os', 0
+Using Stack
+	-cannot push and pop single byte (ex. al, ah). Has to be full word
+	-bp and sp are esstially top and bottom of stack
+	-stack grows downward from base pointer, so push gets stored below
+	-when pushing and popping, values less than a word, or 16bits, will be stored in least
+	significant register. so if register bx with a char is pushed,it can be retrieved from bl
+Control Structures
+	-
