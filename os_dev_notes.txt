@@ -65,5 +65,52 @@ Using Stack
 	-stack grows downward from base pointer, so push gets stored below
 	-when pushing and popping, values less than a word, or 16bits, will be stored in least
 	significant register. so if register bx with a char is pushed,it can be retrieved from bl
-Control Structures
-	-
+CPU Flags Registers
+	-jumps = je(jmp equal) jne(jump not equal) jle(jump less than equal) etc
+Functions
+	-on cpu level, functions are just jumps to addresses of a rotuine then a jump back
+	-instead off jumping to function and jumping back, use call and ret
+	-call pushes return address to stack and return pops the addresss back off
+	-use pusha and popa in function to perserve registers
+Include File
+	-%include "file.path"
+	-when assembly multiple files into a binary file, just reference main file
+Reading the disk
+	-boot sector previously discussed is 512bytes at begining of disk "head 0 cyl 0 sector 0)
+	-must bootstrap rest of code from disk into memory
+	-CPU runs intital Real Mode, maximum size of registers is 16bit, which means the highest
+	addr is 0xffff, which amounts to 64kbs
+	-modern operating systems would never fit here, solution is Segmenetation
+	-Segment Registers
+		-cs, ds, ss, es
+		-main memory is divided into segments that are indexed by these registers
+		-ds = data segment. Where things like instructions and registes ar estore
+		-ss = stack segement. Base pointer stored here
+		-adjacent segment registers all overla except for 16 bytes
+		-calulate absolute address by multiplying value in segmemt register by 16 and then adds
+		offset address.
+		-since working in hexidecimal, multiplying by 16 is just leftshifting value
+			-ex. 0x42 * 16 == 0x420
+			-then add offset address, so
+				-mov ax, [0x20]
+				-absolute address would by 0x440
+		-using [org 0x7c00], assembler will do this automatically
+		-segment addressing allow coder to reach further into memory
+			-over 1mb (0xffff * 16 + 0xffff)
+Using Bios to Read Disks
+	-different storage devices require different routines
+	-floppy required coder to specifically turn on and off motor that spins disk 
+	-Hard disk BIOS routine= after rasing 0x13 interrupt(disk interrupt), set register al
+	to 0x02
+	-mov dl, 0  ;read drive 0 (first floppy drive)
+	-mov ch, 3  ;select cylinder 3
+	-mov dh, 1  ;select track on second side of floppy, 0 would be first side
+	-mov cl, 4  ;select fourth sector on the track, count base 1
+	-mov al, 5  ;read 5 sectors from the start point
+	-Then set the address that BIOS neeads to read sectors to, Bios expects to find in ES:BX
+	-mov bx, 0xa000
+	-mov es, bx
+	-mov bx, 0x1234  ;this means data will be read to 0xa000:0x1234
+	-int 0x13   ; bios interrupt to actually perfrom these tasks
+	-optional, jc disk_error
+	
