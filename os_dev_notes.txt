@@ -196,4 +196,10 @@ I/O programming
 		out dx, al     ;udate DOR of the device
 Direct Access Memory
 	-cpu passes job of I/O devices to direct memory access (DMA)
-	-
+Screen Driver
+	-address 0xb8000
+	-cursor is blinking line next to character cell
+Developing drivers
+	-get screen offset that maps row and column coordinates
+		-each cell holds two bytes, so calulation is (offset((row * 80(this is the width of row)+ col)* 2 = 0ffset)
+	
