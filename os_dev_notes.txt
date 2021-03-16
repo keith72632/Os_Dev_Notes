@@ -172,5 +172,28 @@ Kernels
     -C makes heavy use of the stack for stroing variables local to function
         -upon entering function, base pointer is increaded to the current top of stack, 
         creating a local stack
+			-called 'stack frame'
     -before updating base pointer in local function, push to stack for storage
-    -
+    -C compilers will push argumnets onto stack in reverse, so first argument is on top
+Finding Way to Kernel
+	-write assembly routine to enter kernel correctly
+	-use asse,bly for kernel entry so compiler doesnt mess it up
+Drivers
+	-Internally, controller chips hace several registers that can be read, write or both
+	-the state of the registers tell the controller what to do
+	-ex. Intels 82077AA has pin 57 labeled meo that drives motor for floppy
+		-when on, motor spins
+		-think of this like peripheral from ARM
+		-select the register by address
+	-I/O buses responsible for realaying the instructions to devices
+I/O programming
+	-registers of device controllers are memory mapped seperate from main memory
+	-in and out assembly instruction use to read and write, respectivley, to these register
+	-ex. DOR register address is 0x3f2
+		mov dx, 0x3f2  ;must use dx to store port addr
+		in al, dx      ;read contents of port to al
+		or al, 00001000b ;switch on the motor bit
+		out dx, al     ;udate DOR of the device
+Direct Access Memory
+	-cpu passes job of I/O devices to direct memory access (DMA)
+	-
